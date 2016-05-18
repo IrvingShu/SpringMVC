@@ -61,8 +61,9 @@ public class MainController {
 	}
 	
 	
-	@RequestMapping("info")
+	//@RequestMapping("info")
 	//@ResponseBody
+	/*
 	public Map<String, String> info()
 	{	
 		
@@ -73,31 +74,32 @@ public class MainController {
 		for(User u: users){
         	map.put("key",u.getUsername());
         }
+		
 		return map;
 	}
+	*/
 	
-	/*
+
 	@RequestMapping("info")
-	public String info(HttpServletRequest request, HttpServletResponse response)
+	public void info(HttpServletRequest request,UserPage page)
 	{
+		System.out.println(page.getPageNo());
+		int pageNum = 3;
 		List<User> users;
 		users = userDAO.selectAll();
-		String result =  "{\"name\":\""+users.get(0).getUsername()+"\",\"id\":\""+users.get(0).getId()+"\"}";
-        //for(User u: users){
-        //	u.display();
-        // 	result = "{\"name\":\""+u.getUsername()+"\",\"id\":\""+u.getId()+"\"}";//user
-        //}
-        response.setContentType("application/json");
-        try { 
-            PrintWriter out = response.getWriter(); 
-            out.write(result);//给页面上传输json对象 
-       } catch (IOException e) { 
-            e.printStackTrace(); 
-       } 
-        	
-		return "redirect:info.jsp";
-	}*/
-	
-	
-	
+		int total = 0;
+		int allcount = users.size(); //得到总数
+		if(allcount % pageNum == 0)
+		{
+			total = allcount / pageNum;
+		}else{
+			total = allcount / pageNum + 1;
+		}
+        
+		List<User> showusersList = users.subList(page.getPageNo() * total , (page.getPageNo()+1)*total - 1);
+		request.getSession().setAttribute("Users", showusersList);
+	    request.getSession().setAttribute("Total", total);
+	    request.getSession().setAttribute("page", page);
+
+	}	
 }

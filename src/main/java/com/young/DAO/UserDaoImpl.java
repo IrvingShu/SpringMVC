@@ -5,6 +5,6 @@ import com.young.model.*;
 
 public interface UserDaoImpl {
 	public List<User> selectAll();
-	
 	public User selectByUserName(String username);
+	
 }
